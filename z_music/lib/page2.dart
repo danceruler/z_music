@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
@@ -32,7 +34,7 @@ class Page2 extends StatelessWidget{
 
       //内容区域
       body: Container(
-        margin:const EdgeInsets.fromLTRB(0, 100, 0, 0),
+        margin:EdgeInsets.fromLTRB(0, MediaQueryData.fromWindow(window).padding.top, 0, 0),
         alignment: Alignment.center,
         child: Text('中间内容部分',style: TextStyle(color: Colors.red,fontSize: 36.0),),
       ),

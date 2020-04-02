@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:z_music/page2.dart';
 import './indexbody.dart';
 
 class IndexPage extends StatefulWidget{
@@ -8,9 +9,22 @@ class IndexPage extends StatefulWidget{
 }
 
 class _IndexPageState extends State<IndexPage>{
+    final _bottomNavigationColor = Colors.green;
+    int _currentIndex = 0;
+
+    List<Widget> list = List();
+
+    @override
+    void initState() {
+      list
+        ..add(IndexBody())
+        ..add(Page2());
+      super.initState();
+    }
+
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
+    
     return Scaffold(
       // appBar: AppBar(
       //   // backgroundColor: Colors.red,
@@ -34,7 +48,52 @@ class _IndexPageState extends State<IndexPage>{
       //   //   preferredSize: Size.fromHeight(50.0),
       //   // ),
       // ),
-      body: IndexBody(),
+      body: list[_currentIndex],
+      bottomNavigationBar:BottomNavigationBar(
+        selectedItemColor: Colors.green,
+        unselectedItemColor: Colors.black,
+        items: [
+          BottomNavigationBarItem(
+              icon: Icon(
+                Icons.home,
+              ),
+              title: Text(
+                'HOME',
+                style: TextStyle(),
+              )),
+          BottomNavigationBarItem(
+              icon: Icon(
+                Icons.music_note,
+              ),
+              title: Text(
+                'Music',
+                style: TextStyle(),
+              )),
+          BottomNavigationBarItem(
+              icon: Icon(
+                Icons.file_download,
+              ),
+              title: Text(
+                'Download',
+                style: TextStyle(),
+              )),
+          BottomNavigationBarItem(
+              icon: Icon(
+                Icons.person,
+              ),
+              title: Text(
+                'My',
+                style: TextStyle(),
+              )),
+        ],
+        currentIndex: _currentIndex,
+        onTap: (int index) {
+          setState(() {
+            _currentIndex = index;
+          });
+        },
+        type: BottomNavigationBarType.fixed,
+      ) 
     );
   }
 }
