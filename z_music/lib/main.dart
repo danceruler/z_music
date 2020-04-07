@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:z_music/util/music/kugouMusic.dart';
 import './pages/index/index.dart';
 
 void main(){
@@ -57,32 +58,23 @@ class _MyHomePageState extends State<MyHomePage> {
   int _counter = 100;
 
   void _incrementCounter() {
-    // Navigator.push(context, MaterialPageRoute(builder: (context) {
-    //   return Page2(title: 'Flutter Demo Home Page2');
-    // }));
-    Navigator.push(context, PageRouteBuilder(pageBuilder:
-                      (BuildContext context, Animation animation,
-                          Animation secondaryAnimation) 
-                          {
-                            return ScaleTransition(
-                                scale: animation,
-                                alignment: Alignment.center,
-                                child: IndexPage()
-                            );
-                          }
-    ));
-    // setState(() {
-    //   // This call to setState tells the Flutter framework that something has
-    //   // changed in this State, which causes it to rerun the build method below
-    //   // so that the display can reflect the updated values. If we changed
-    //   // _counter without calling setState(), then the build method would not be
-    //   // called again, and so nothing would appear to happen.
-    //   _counter++;
-    // });
+    KugouMusic().searchLits("勇气", 1, 10);
+    // Navigator.push(context, PageRouteBuilder(pageBuilder:
+    //                   (BuildContext context, Animation animation,
+    //                       Animation secondaryAnimation) 
+    //                       {
+    //                         return ScaleTransition(
+    //                             scale: animation,
+    //                             alignment: Alignment.center,
+    //                             child: IndexPage()
+    //                         );
+    //                       }
+    // ));
   }
 
   @override
   Widget build(BuildContext context) {
+    
     // This method is rerun every time setState is called, for instance as done
     // by the _incrementCounter method above.
     //

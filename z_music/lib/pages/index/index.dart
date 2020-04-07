@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:z_music/page2.dart';
+import 'package:z_music/util/music/kugouMusic.dart';
 import './indexbody.dart';
 
 class IndexPage extends StatefulWidget{
@@ -13,7 +14,7 @@ class _IndexPageState extends State<IndexPage>{
     int _currentIndex = 0;
 
     List<Widget> list = List();
-
+    
     @override
     void initState() {
       list

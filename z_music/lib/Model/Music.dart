@@ -5,7 +5,12 @@ class Music{
   String singer;
   int duration;
   String albumName;
+
+  Music({
+    this.name,this.playUrl,this.coverUrl,this.singer,this.duration,this.albumName
+  });
 }
 
 class SearchMusic extends Music{
+  
 }
