@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:z_music/util/music/QQMusic.dart';
 import 'package:z_music/util/music/kugouMusic.dart';
 import './pages/index/index.dart';
 
@@ -58,7 +59,7 @@ class _MyHomePageState extends State<MyHomePage> {
   int _counter = 100;
 
   void _incrementCounter() {
-    KugouMusic().searchLits("勇气", 1, 10);
+    QQMusic().searchLits("勇气", 1, 10);
     // Navigator.push(context, PageRouteBuilder(pageBuilder:
     //                   (BuildContext context, Animation animation,
     //                       Animation secondaryAnimation) 
