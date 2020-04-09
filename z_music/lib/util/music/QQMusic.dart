@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:z_music/Model/Api.dart';
 import 'package:z_music/Model/Music.dart';
+import 'package:z_music/Model/ReqExc.dart';
 import 'package:z_music/util/music/BasicMusic.dart';
 import 'package:z_music/util/util.dart';
 import 'package:http/http.dart' as http;
@@ -9,6 +10,7 @@ import 'package:http/http.dart' as http;
 class QQMusic implements BasicMusic {
   static String search_jsonpCallback = "";
   static String musicinfo_jsonpCallback = "";
+  static String uin = "821768698";
   QQMusic() {
     if (search_jsonpCallback == "")
       search_jsonpCallback = "MusicJsonCallback508892649653171";
@@ -31,12 +33,12 @@ class QQMusic implements BasicMusic {
           "guid": "5464878",
           "songmid": [music.id],
           "songtype": [0],
-          "uin": "821768698",
+          "uin": uin,
           "loginflag": 1,
           "platform": "20"
         }
       },
-      "comm": {"uin": 821768698, "format": "json", "ct": 24, "cv": 0}
+      "comm": {"uin": uin, "format": "json", "ct": 24, "cv": 0}
     };
     var apiUrl = Util.stringFormat(ApiList.qq_getMusicInfo, [
       musicinfo_jsonpCallback,
@@ -45,12 +47,19 @@ class QQMusic implements BasicMusic {
       // UrlEncode().encode(jsonEncode(data))
     ]);
     print(apiUrl);
-    await http.get(apiUrl).then((response){
-      RegExp reg = new RegExp(r"(?=" + musicinfo_jsonpCallback + "\()(.*)(?=\))");
+    await http.get(apiUrl).then((response) {
+      RegExp reg =
+          new RegExp(r"(?=" + musicinfo_jsonpCallback + "\()(.*)(?=\))");
       var jsonStr = Util.onlyMatchOne(reg, utf8.decode(response.bodyBytes));
-      jsonStr = jsonStr.substring(1,jsonStr.length-1);
+      jsonStr = jsonStr.substring(1, jsonStr.length - 1);
       var jsonMap = jsonDecode(jsonStr);
-      var a = 1;
+      if (jsonMap["code"] == 0) {
+        music.playUrl = jsonMap["req_0"]["data"]["sip"][0] +
+            jsonMap["req_0"]["data"]["midurlinfo"][0]["purl"];
+      } else {
+        throw ReqException("请求异常,请尝试打开网页版qq音乐解锁");
+      }
+      return music;
     });
   }
 
@@ -58,7 +67,7 @@ class QQMusic implements BasicMusic {
   Future<List<Music>> searchLits(String key, int page, int pageSize) async {
     List<Music> result = List<Music>();
     var apiUrl = Util.stringFormat(ApiList.qq_searchlist,
-        [page.toString(), pageSize.toString(), key, search_jsonpCallback, "0"]);
+        [page.toString(), pageSize.toString(), key, search_jsonpCallback, uin]);
     await http.get(apiUrl).then((response) {
       RegExp reg = new RegExp(r"(?=" + search_jsonpCallback + "\()(.*)(?=\))");
       var jsonStr = Util.onlyMatchOne(reg, response.body);
@@ -72,20 +81,24 @@ class QQMusic implements BasicMusic {
           for (int i = 0; i < jsonMap["data"]["song"]["list"].length; i++) {
             var jsonObject = jsonMap["data"]["song"]["list"][i];
             Music music = Music(
-                name: jsonObject["title"],
-                singer: jsonObject["singer"][0]["title"],
-                albumName: jsonObject["album"]["title"],
-                id: jsonObject["mid"],
-                duration: jsonObject["interval"]);
+              name: jsonObject["title"],
+              singer: jsonObject["singer"][0]["title"],
+              albumId: jsonObject["album"]["id"].toString(),
+              albumName: jsonObject["album"]["title"],
+              id: jsonObject["mid"],
+              duration: jsonObject["interval"],
+              coverUrl: Util.stringFormat(
+                  ApiList.qq_coverImg, [jsonObject["album"]["pmid"]]),
+              isfree: jsonObject["pay"]["price_track"] != 0 ? 0 : 1,
+            );
             result.add(music);
           }
         }
-        getMusicInfo(result[0]);
         return result;
       }
       //此时表示请求失败
       else {
-        return null;
+        throw ReqException("请求异常,请尝试打开网页版qq音乐解锁");
       }
     });
   }

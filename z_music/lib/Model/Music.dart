@@ -11,10 +11,11 @@ class Music{
   String sqFileHash;
   String hqFileHash;
   String mvHash;
+  int isfree;
 
   Music({
     this.id,this.albumId,
     this.name,this.playUrl,this.coverUrl,this.singer,this.duration,this.albumName,
-    this.fileHash,this.sqFileHash,this.hqFileHash,this.mvHash
+    this.fileHash,this.sqFileHash,this.hqFileHash,this.mvHash,this.isfree
   });
 }

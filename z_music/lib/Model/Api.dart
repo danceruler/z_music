@@ -5,6 +5,6 @@ class ApiList{
   static const kugou_getMusicInfo = "https://wwwapi.kugou.com/yy/index.php?r=play/getdata&callback={0}&hash={1}&album_id={2}&dfid=1aJS0t0U5yRr0qQNef02gPgO&mid=a1d421b9093150b003fbcd4de3ac3b15&platid=4&_={3}";
   static const qq_searchlist = "https://c.y.qq.com/soso/fcgi-bin/client_search_cp?ct=24&qqmusic_ver=1298&new_json=1&remoteplace=txt.yqq.center&searchid=46898848196070831&t=0&aggr=1&cr=1&catZhida=1&lossless=0&flag_qc=0&p={0}&n={1}&w={2}&g_tk_new_20200303=126304154&g_tk=126304154&jsonpCallback={3}&loginUin={4}&hostUin=0&format=jsonp&inCharset=utf8&outCharset=utf-8&notice=0&platform=yqq&needNewCode=0";
   static const qq_getMusicInfo = "https://u.y.qq.com/cgi-bin/musicu.fcg?callback={0}&g_tk=1&jsonpCallback={0}&loginUin={1}&hostUin=0&format=jsonp&inCharset=utf8&outCharset=utf-8&notice=0&platform=yqq&needNewCode=0&data={2}";
-  
+  static const qq_coverImg = "https://y.gtimg.cn/music/photo_new/T002R300x300M000{0}.jpg?max_age=2592000";
 }
 

@@ -59,7 +59,7 @@ class _MyHomePageState extends State<MyHomePage> {
   int _counter = 100;
 
   void _incrementCounter() {
-    QQMusic().searchLits("勇气", 1, 10);
+    KugouMusic().searchLits("等你下课", 1, 10);
     // Navigator.push(context, PageRouteBuilder(pageBuilder:
     //                   (BuildContext context, Animation animation,
     //                       Animation secondaryAnimation) 
