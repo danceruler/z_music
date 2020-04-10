@@ -5,4 +5,6 @@ class BasicMusic{
   Future<List<Music>> searchLits(String key, int page, int pageSize) async{}
   //获取音乐详细信息
   Future<Music> getMusicInfo(Music music) async{}
+  //将获取的歌曲字符串数据转化为歌词信息
+  Future<List<Lyric>> getMusicLyrics(String lyricStr) async{}
 }

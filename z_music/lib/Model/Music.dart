@@ -1,5 +1,6 @@
 class Music{
   String id;
+  String mid;
   String albumId;
   String name;
   String playUrl;
@@ -12,10 +13,21 @@ class Music{
   String hqFileHash;
   String mvHash;
   int isfree;
+  List<Lyric> lyric;
 
   Music({
     this.id,this.albumId,
     this.name,this.playUrl,this.coverUrl,this.singer,this.duration,this.albumName,
-    this.fileHash,this.sqFileHash,this.hqFileHash,this.mvHash,this.isfree
+    this.fileHash,this.sqFileHash,this.hqFileHash,this.mvHash,this.isfree,this.mid
+  });
+}
+
+class Lyric{
+  int startMiSeconds;
+  String startTime;
+  String text;
+
+  Lyric({
+    this.startMiSeconds,this.startTime,this.text
   });
 }
