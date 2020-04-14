@@ -65,7 +65,7 @@ class KugouMusic implements BasicMusic {
         throw ReqException("请求异常，请确定该网络是否可以正常使用酷狗音乐网页版播放歌曲");
       }
     });
-    await getMusicInfo(result[0]);
+    // await getMusicInfo(result[0]);
     return result;
   }
 
@@ -91,7 +91,7 @@ class KugouMusic implements BasicMusic {
         "User-Agent":
             "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:75.0) Gecko/20100101 Firefox/75.0"
       };
-      await http.get(apiUrl, headers: headers).then((response) {
+      await http.get(apiUrl, headers: headers).then((response) async{
         RegExp reg = new RegExp(r"(?=" + requestCallback + "\()(.*)(?=\))");
         var jsonStr = Util.onlyMatchOne(reg, response.body);
         jsonStr = jsonStr.substring(1, jsonStr.length - 2);
@@ -100,6 +100,7 @@ class KugouMusic implements BasicMusic {
           music.coverUrl = jsonMap["data"]["img"];
           music.playUrl = jsonMap["data"]["play_url"];
           music.isfree = music.playUrl == "" ? 0 : 1;
+          music.lyric = await getMusicLyrics(jsonMap["data"]["lyrics"]);
         } else {
           throw ReqException("请求异常，请确定该网络是否可以正常使用酷狗音乐网页版播放歌曲");
         }

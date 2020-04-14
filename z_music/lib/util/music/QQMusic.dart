@@ -83,6 +83,7 @@ class QQMusic implements BasicMusic {
       lyricStr = parse(jsonMap["lyric"]).body.innerHtml;
     });
     music.lyric = await getMusicLyrics(lyricStr);
+    print(music.playUrl);
     return music;
   }
 
@@ -124,7 +125,7 @@ class QQMusic implements BasicMusic {
         throw ReqException("请求异常,请尝试打开网页版qq音乐解锁");
       }
     });
-    // await getMusicInfo(result[0]);
+    await getMusicInfo(result[0]);
     // await getMusicInfo(result[1]);
     return result;
   }

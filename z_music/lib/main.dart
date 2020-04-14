@@ -1,128 +1,195 @@
+// ignore_for_file: public_member_api_docs, lines_longer_than_80_chars
 
+import 'dart:math';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:z_music/util/music/QQMusic.dart';
+import 'package:provider/provider.dart';
+import 'package:z_music/Model/Music.dart';
 import 'package:z_music/util/music/kugouMusic.dart';
-import './pages/index/index.dart';
 
-void main(){
-  runApp(MyApp());
-  // if (Platform.isAndroid) {
-  //   // 以下两行 设置android状态栏为透明的沉浸。写在组件渲染之后，是为了在渲染后进行set赋值，覆盖状态栏，写在渲染之前MaterialApp组件会覆盖掉这个值。
-  //     SystemUiOverlayStyle systemUiOverlayStyle =
-  //         SystemUiOverlayStyle(statusBarColor: Colors.transparent);
-  //   SystemChrome.setSystemUIOverlayStyle(systemUiOverlayStyle);
-  //   }  
-} 
+/// This is an example of a counter application using `provider` + [ChangeNotifier].
+///
+/// It builds a typical `+` button, with a twist: the texts using the counter
+/// are built using the localization framework.
+///
+/// This shows how to bind our custom [ChangeNotifier] to things like [LocalizationsDelegate].
+
+void main() => runApp(MyApp());
+
+class Counter with ChangeNotifier {
+  int _count = 0;
+  int get count => _count;
+  
+  Music _music = Music();
+  Music get music => _music;
+
+  void increment() {
+    _count++;
+    notifyListeners();
+  }
+
+  void initMusic() async {
+    var musicList = await KugouMusic().searchLits("天下", 1, 10);
+    var index = Random().nextInt(9);
+    var musicinfo =
+        await KugouMusic().getMusicInfo(musicList[index]);
+    _music = musicinfo;
+    notifyListeners();
+  }
+}
 
 class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
-        primarySwatch: Colors.blue,
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => Counter()),
+      ],
+      child: Consumer<Counter>(
+        builder: (context, counter, _) {
+          return MaterialApp(
+            // supportedLocales: const [Locale('fr', 'CH')],
+            localizationsDelegates: [
+              // DefaultMaterialLocalizations.delegate,
+              // DefaultWidgetsLocalizations.delegate,
+              _ExampleLocalizationsDelegate(counter.count),
+            ],
+            home: const MyHomePage(),
+          );
+        },
       ),
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
+class ExampleLocalizations {
+  static ExampleLocalizations of(BuildContext context) {
+    return Localizations.of<ExampleLocalizations>(
+        context, ExampleLocalizations);
+  }
 
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
+  const ExampleLocalizations(this._count);
 
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
+  final int _count;
 
-  final String title;
-
-  @override
-  _MyHomePageState createState() => _MyHomePageState();
+  String get title => 'Tapped $_count times';
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 100;
+class _ExampleLocalizationsDelegate
+    extends LocalizationsDelegate<ExampleLocalizations> {
+  const _ExampleLocalizationsDelegate(this.count);
 
-  void _incrementCounter() {
-    KugouMusic().searchLits("清明雨上", 1, 10);
-    // Navigator.push(context, PageRouteBuilder(pageBuilder:
-    //                   (BuildContext context, Animation animation,
-    //                       Animation secondaryAnimation) 
-    //                       {
-    //                         return ScaleTransition(
-    //                             scale: animation,
-    //                             alignment: Alignment.center,
-    //                             child: IndexPage()
-    //                         );
-    //                       }
-    // ));
+  final int count;
+
+  @override
+  bool isSupported(Locale locale) => locale.languageCode == 'en';
+
+  @override
+  Future<ExampleLocalizations> load(Locale locale) {
+    return SynchronousFuture(ExampleLocalizations(count));
   }
 
   @override
+  bool shouldReload(_ExampleLocalizationsDelegate old) => old.count != count;
+}
+
+class MyHomePage extends StatelessWidget {
+  const MyHomePage({Key key}) : super(key: key);
+
+  @override
   Widget build(BuildContext context) {
-    
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
+    return Scaffold(
+      appBar: AppBar(title: const Title()),
+      body: const Center(child: CounterLabel()),
+      floatingActionButton: const IncrementCounterButton(),
+    );
+  }
+}
+
+class IncrementCounterButton extends StatelessWidget {
+  const IncrementCounterButton({Key key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return FloatingActionButton(
+      onPressed: () {
+        Provider.of<Counter>(context, listen: false).increment();
+      },
+      tooltip: 'Increment',
+      child: const Icon(Icons.add),
+    );
+  }
+}
+
+class CounterLabel extends StatelessWidget {
+  const CounterLabel({Key key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final counter = Provider.of<Counter>(context);
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        const Text(
+          'You have pushed the button this many times:',
+        ),
+        Text(
+          '${counter.count}',
+          // ignore: deprecated_member_use
+          style: Theme.of(context).textTheme.display1,
+        ),
+        MaterialButton(
+            onPressed: () =>
+                Navigator.push(context, MaterialPageRoute(builder: (context) {
+                  return SecondPage();
+                })),
+            child: Text("toNextPage")),
+        Text("musicName:" + '${counter.music.name}'),
+        MaterialButton(
+          onPressed: () => counter.initMusic(),
+          child: Text("更新音乐"),
+        ),
+      ],
+    );
+  }
+}
+
+class Title extends StatelessWidget {
+  const Title({Key key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(ExampleLocalizations.of(context).title);
+  }
+}
+
+class SecondPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    // TODO: implement build
     return Scaffold(
       appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
+        title: Text(""),
       ),
       body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Invoke "debug painting" (press "p" in the console, choose the
-          // "Toggle Debug Paint" action from the Flutter Inspector in Android
-          // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
-          // to see the wireframe for each widget.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.display1,
-            ),
-          ],
-        ),
-      ),
+          child: Column(
+        children: <Widget>[
+          Text("${Provider.of<Counter>(context).count}"),
+          Text("musicName:" + '${Provider.of<Counter>(context).music.name}'),
+          MaterialButton(
+            onPressed: () => Provider.of<Counter>(context,listen: false).initMusic(),
+            child: Text("更新音乐"),
+          ),
+        ],
+      )),
       floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
+        onPressed: () {
+          Provider.of<Counter>(context, listen: false).increment();
+        },
         child: Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+      ),
     );
   }
 }
