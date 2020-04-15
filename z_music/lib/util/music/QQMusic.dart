@@ -115,6 +115,7 @@ class QQMusic implements BasicMusic {
               coverUrl: Util.stringFormat(
                   ApiList.qq_coverImg, [jsonObject["album"]["pmid"]]),
               isfree: jsonObject["pay"]["pay_play"] == 0 ? 1 : 0,
+              basicMusic:QQMusic()
             );
             result.add(music);
           }

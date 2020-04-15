@@ -58,7 +58,10 @@ class KugouMusic implements BasicMusic {
               fileHash: item.FileHash,
               sqFileHash: item.SQFileHash,
               hqFileHash: item.HQFileHash,
-              mvHash: item.MvHash);
+              mvHash: item.MvHash,
+              basicMusic:KugouMusic()
+            );
+              
           result.add(music);
         }
       } else {

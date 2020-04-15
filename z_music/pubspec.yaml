@@ -29,10 +29,14 @@ dependencies:
   dio_cookie_manager: ^1.0.0
   cookie_jar: ^1.0.0
   provider: ^4.0.5
+  audioplayer: 0.8.1
+  audioplayer_web: 0.7.1
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+
+    
 
 
 # For information on the generic Dart part of this file, see the
@@ -50,7 +54,8 @@ flutter:
   # assets:
   #  - images/a_dot_burr.jpeg
   #  - images/a_dot_ham.jpeg
-
+  assets:
+    - images/logo.png
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
 
