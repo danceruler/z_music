@@ -8,8 +8,11 @@ import 'package:provider/provider.dart';
 import 'package:z_music/Model/AppProvider.dart';
 import 'package:z_music/Model/Music.dart';
 import 'package:z_music/Model/PublicV.dart';
+import 'package:z_music/pages/index/index.dart';
 import 'package:z_music/util/music/QQMusic.dart';
 import 'package:z_music/util/music/kugouMusic.dart';
+
+import 'Widgets/musiccontrol.dart';
 
 /// This is an example of a counter application using `provider` + [ChangeNotifier].
 ///
@@ -81,11 +84,31 @@ class MyHomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final musicModel = Provider.of<MusicModel>(context);
+    final size = MediaQuery.of(context).size;
+    final width = size.width;
+    final height = size.height;
     return Scaffold(
       // appBar: AppBar(title: const Title()),
       // body: const Center(child: CounterLabel()),
       // floatingActionButton: const IncrementCounterButton(),
-      body: const Center(child: CounterLabel()),
+      backgroundColor: Colors.blue,
+      // body: const Center(child: CounterLabel()),
+      body: IndexPage(),
+      floatingActionButton: Container(
+        child: ClipOval(
+          child: Image(
+            image: musicModel.playingMusic.coverUrl == null
+                ? AssetImage("images/logo.png")
+                : NetworkImage(musicModel.playingMusic.coverUrl),
+            height: 60,
+            width: 60,
+            fit: BoxFit.cover,
+          ),
+        ),
+      ),
+      floatingActionButtonLocation: CustomFloatingActionButtonLocation(
+          FloatingActionButtonLocation.centerDocked, -(width/2-40), 20),
       bottomNavigationBar: Z_Music_BottomAppBar(),
     );
   }
@@ -96,20 +119,16 @@ class Z_Music_BottomAppBar extends StatelessWidget {
   Widget build(BuildContext context) {
     final musicModel = Provider.of<MusicModel>(context);
     return BottomAppBar(
-        color: Colors.green,
+        color: Colors.white,
+        elevation: 0,
         child: Container(
-          height: 150,
+          height: 120,
+          decoration: new BoxDecoration(
+            color: Colors.white,
+          ),
           child: Column(
             children: <Widget>[
-              Row(
-                children: <Widget>[
-                  Image(
-                    image: AssetImage("images/logo.png"),
-                    height: 80,
-                    width: 80,
-                  ),
-                ],
-              ),
+              MusicControl(),
               Row(
                 //里边可以放置大部分Widget，让我们随心所欲的设计底栏
                 mainAxisAlignment: MainAxisAlignment.spaceAround,

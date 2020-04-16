@@ -58,6 +58,7 @@ class MusicModel with ChangeNotifier {
     }
     Player.playingPosition = Duration.zero;
     play();
+    notifyListeners();
   }
 
   //上一首
@@ -69,6 +70,7 @@ class MusicModel with ChangeNotifier {
     }
     Player.playingPosition = Duration.zero;
     play();
+    notifyListeners();
   }
 
   //播放
@@ -78,16 +80,18 @@ class MusicModel with ChangeNotifier {
       music = await music.basicMusic.getMusicInfo(music);
     }
     Player.audioPlayer.play(music.playUrl);
+    notifyListeners();
   }
 
   //暂停
   void pause() {
     Player.audioPlayer.pause();
+    notifyListeners();
   }
 }
 
 class Counter with ChangeNotifier {
-    int _count = 0;
+  int _count = 0;
   int get count => _count;
   
   Music _music = Music();
