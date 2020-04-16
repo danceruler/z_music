@@ -93,8 +93,8 @@ class MyHomePage extends StatelessWidget {
       // body: const Center(child: CounterLabel()),
       // floatingActionButton: const IncrementCounterButton(),
       backgroundColor: Colors.blue,
-      // body: const Center(child: CounterLabel()),
-      body: IndexPage(),
+      body: const Center(child: CounterLabel()),
+      // body: IndexPage(),
       floatingActionButton: Container(
         child: ClipOval(
           child: Image(
