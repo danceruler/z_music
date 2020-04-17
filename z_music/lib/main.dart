@@ -30,6 +30,7 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (_) => Counter()),
         ChangeNotifierProvider(create: (_) => MusicModel()),
+        ChangeNotifierProvider(create: (_) => Player()),
       ],
       child: Consumer<Counter>(
         builder: (context, counter, _) {
@@ -90,25 +91,23 @@ class MyHomePage extends StatelessWidget {
     final height = size.height;
     return Scaffold(
       // appBar: AppBar(title: const Title()),
-      // body: const Center(child: CounterLabel()),
-      // floatingActionButton: const IncrementCounterButton(),
       backgroundColor: Colors.blue,
       body: const Center(child: CounterLabel()),
-      // body: IndexPage(),
       floatingActionButton: Container(
         child: ClipOval(
           child: Image(
-            image: musicModel.playingMusic.coverUrl == null
+            image: musicModel.playingMusic.coverUrl == null ||
+                    musicModel.playingMusic.coverUrl == ""
                 ? AssetImage("images/logo.png")
                 : NetworkImage(musicModel.playingMusic.coverUrl),
-            height: 60,
-            width: 60,
-            fit: BoxFit.cover,
+            height: 45,
+            width: 45,
+            fit: BoxFit.fill,
           ),
         ),
       ),
       floatingActionButtonLocation: CustomFloatingActionButtonLocation(
-          FloatingActionButtonLocation.centerDocked, -(width/2-40), 20),
+          FloatingActionButtonLocation.centerDocked, -(width / 2 - 33), 17),
       bottomNavigationBar: Z_Music_BottomAppBar(),
     );
   }
@@ -122,13 +121,18 @@ class Z_Music_BottomAppBar extends StatelessWidget {
         color: Colors.white,
         elevation: 0,
         child: Container(
-          height: 120,
+          height: 100,
           decoration: new BoxDecoration(
             color: Colors.white,
           ),
           child: Column(
             children: <Widget>[
               MusicControl(),
+              Divider(
+                height: 0.5,
+                indent: 0.0,
+                color: Color(0xFFdcdcdc),
+              ),
               Row(
                 //里边可以放置大部分Widget，让我们随心所欲的设计底栏
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -185,6 +189,7 @@ class CounterLabel extends StatelessWidget {
   Widget build(BuildContext context) {
     final counter = Provider.of<Counter>(context);
     final musicModel = Provider.of<MusicModel>(context);
+    final player = Provider.of<Player>(context);
     return Column(
       mainAxisSize: MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.center,
@@ -210,9 +215,9 @@ class CounterLabel extends StatelessWidget {
           },
           child: Text("更新音乐"),
         ),
-        Text("当前播放顺序为" + PlayOrder.getName(musicModel.playOrder)),
+        Text("当前播放顺序为" + PlayOrder.getName(Player.playOrder)),
         MaterialButton(
-          onPressed: () => musicModel.changePlayOrder(),
+          onPressed: () => player.changePlayOrder(),
           child: Text("修改播放顺序"),
         ),
       ],

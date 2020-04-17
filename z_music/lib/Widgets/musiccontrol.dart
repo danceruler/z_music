@@ -1,74 +1,96 @@
+import 'package:audioplayer/audioplayer.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:z_music/Model/AppProvider.dart';
+import 'package:z_music/Model/Music.dart';
+import 'package:z_music/Widgets/RunLamp.dart';
+import 'package:z_music/Widgets/painter/MusicPlayButtonPainter.dart';
 
-class MusicControl extends StatefulWidget {
-  @override
-  State<StatefulWidget> createState() => _MusicControl();
-}
+// class MusicControl extends StatefulWidget {
+//   @override
+//   State<StatefulWidget> createState() => _MusicControl();
+// }
 
-class _MusicControl extends State<MusicControl> {
+class MusicControl extends StatelessWidget {
+  final double height = 45;
   @override
   Widget build(BuildContext context) {
     final musicModel = Provider.of<MusicModel>(context);
-    return new Stack(
-      // alignment: const FractionalOffset(0.5, 0.7),
-      children: <Widget>[
-        new Container(
-          height: 60,
-          child: new Column(
-            children: <Widget>[
-              // Container(
-              //   height: 15,
-              //   width: 2,
-              //   decoration: new BoxDecoration(
-              //     color: Colors.transparent,
-              //   ),
-              // ),
-              Container(
-                height: 60,
-                width: 1000,
-                decoration: new BoxDecoration(
-                  color: Colors.white,
-                ),
-              ),
-            ],
+    final player = Provider.of<Player>(context);
+    final width = MediaQuery.of(context).size.width;
+    return new Container(
+      color: Colors.white,
+      height: height,
+      child: Row(
+        children: <Widget>[
+          Container(
+            height: height,
+            width: 70,
           ),
-        ),
-        // new Positioned(
-        //   top: 0,
-        //   left: 0,
-        //   child: Container(
-        //     child: ClipOval(
-        //       child: Image(
-        //         image: musicModel.playingMusic.coverUrl == null
-        //             ? AssetImage("images/logo.png")
-        //             : NetworkImage(musicModel.playingMusic.coverUrl),
-        //         height: 60,
-        //         width: 60,
-        //         fit: BoxFit.cover,
-        //       ),
-        //     ),
-        //   ),
-        // ),
-      ],
+          Expanded(
+            child: RunLamp(
+                Text(
+                    '${musicModel.playingMusic.name == null ? '' : musicModel.playingMusic.name}${musicModel.playingMusic.singer == null ? '' : '-' + musicModel.playingMusic.singer}',
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontWeight: FontWeight.normal,
+                      fontSize: 13,
+                    )),
+                new Duration(seconds: 4),
+                230.0,
+                100.0,
+                // 100,
+                // 200
+                width - 175,
+                musicModel.playingMusic.name == null
+                    ? 0
+                    : double.parse(
+                        (musicModel.playingMusic.name.length * 13).toString())),
+          ),
+          Container(
+            height: height,
+            width: 15,
+          ),
+          Container(
+            height: height,
+            width: 45,
+            child: GestureDetector(
+              onTap: () => Player.audioPlayer.state == AudioPlayerState.PLAYING?Player.audioPlayer.pause():Player.audioPlayer.play(Player.playingMusic.playUrl),
+              child:MusicPlayButton(),
+            ) 
+          ),
+          Container(
+            height: height,
+            width: 45,
+            color: Colors.lightGreen,
+          ),
+        ],
+      ),
     );
+  }
+}
 
-    return Row(
-      children: <Widget>[
-        Container(
-          child: ClipOval(
-            child: Image(
-              image: musicModel.playingMusic.coverUrl == null
-                  ? AssetImage("images/logo.png")
-                  : NetworkImage(musicModel.playingMusic.coverUrl),
-              height: 65,
-              width: 65,
-              fit: BoxFit.cover,
-            ),
-          ),
-        )
-      ],
+class MusicPlayButton extends StatefulWidget {
+
+
+
+  @override
+  State<StatefulWidget> createState() => _MusicPlayButton();
+
+  
+}
+
+class _MusicPlayButton extends State<MusicPlayButton> {
+  @override
+  Widget build(BuildContext context) {
+    // final player = Provider.of<Player>(context);
+    return CustomPaint(
+      painter: MusicPlayButtonPainter(
+        nowSecond: Player.playingPosition.inSeconds,
+        allSeconds: Player.playingMusic.duration == null?1: Player.playingMusic.duration,
+        isplaying:  Player.playState == AudioPlayerState.PLAYING?1:0
+      ),
+      size: Size(45,45)
     );
   }
 }

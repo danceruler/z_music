@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 
 class PublicV{
   double statusBarHeight = MediaQueryData.fromWindow(window).padding.top;
-  
+  static double pi = 3.1415926; 
 }
 
 //播放顺序
