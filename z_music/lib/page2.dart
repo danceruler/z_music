@@ -1,9 +1,9 @@
-import 'dart:ui';
+﻿import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-
-class Page2 extends StatelessWidget{
+ 
+class Pagesss extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
